@@ -1,38 +1,40 @@
-import pandas as pd
+import pandas as import pd
 from janome.tokenizer import Tokenizer
 
-df1=pd.read_csv("review1.csv")
-df2=pd.read_csv("review2.csv")
-df3=pd.read_csv("review3.csv")
-df4=pd.read_csv("review4.csv")
-df5=pd.read_csv("review5.csv")
+def s2wakati(list_data):
+    texts=list_data.text
+    t = Tokenizer()
+    wakatis=[]
+    for s_pre in texts:
+        #文中の改行を削除
+        s=''.join(s_pre.splitlines())
+        tokens=t.tokenize(s)
+        wakati_lst=[]
+        for token in tokens:
+            #単語だけwakati_lstに格納
+            wakati_lst.append(token.surface)
+            #単語を並べて間にスペースを入れる
+            wakati=" ".join(wakati_lst)
+        wakatis.append(wakati)
+    return wakatis
 
-df=df1.append(df2).reset_index(drop=True)
-df=df.append(df3).reset_index(drop=True)
-df=df.append(df4).reset_index(drop=True)
-df=df.append(df5).reset_index(drop=True)
+def lern_lst(label_lst,wakati_lst):
+    label_wakati=[]
+    for label,text in zip(label_lst,wakati_lst):
+        label_wakati.append("__label__"+str(label)+","+text)
 
-labels=df.score
-texts=df.text
-t = Tokenizer()
-wakatis=[]
-for s_pre in texts:
-    s=''.join(s_pre.splitlines())
-    tokens=t.tokenize(s)
-    wakati_lst=[]
-    for token in tokens:
-        wakati_lst.append(token.surface)
-        wakati=" ".join(wakati_lst)
-    wakatis.append(wakati)
+    return label_wakati
 
-label_wakati=[]
+def main():
+    df=pd.read_csv("事前に作成した.csv")
+    e_wakati=s2wakati(df)
+    e_label=df.label
+    elements=learning_lst(e_wakati,e_label)
 
-for label,text in zip(labels,wakatis):
-    label_wakati.append("__label__"+str(label)+","+text)
+    f=open("list.txt","w")
+    for e in elements:
+        f.write(e+"\n")
+    f.close()
 
-print(label_wakati)
-
-f=open("list.txt","w")
-for e in label_wakati:
-    f.write(e+"\n")
-f.close()
+if __name__ == '__main__':
+    main()
