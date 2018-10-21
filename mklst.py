@@ -1,8 +1,7 @@
 import pandas as import pd
 from janome.tokenizer import Tokenizer
 
-def s2wakati(list_data):
-    texts=list_data.text
+def s2wakati(texts):
     t = Tokenizer()
     wakatis=[]
     for s_pre in texts:
@@ -27,7 +26,8 @@ def lern_lst(label_lst,wakati_lst):
 
 def main():
     df=pd.read_csv("事前に作成した.csv")
-    e_wakati=s2wakati(df)
+    texts=df.text
+    e_wakati=s2wakati(texts)
     e_label=df.label
     elements=learning_lst(e_wakati,e_label)
 
